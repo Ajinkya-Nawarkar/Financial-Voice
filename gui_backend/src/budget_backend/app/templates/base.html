@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% if title %}
+<title>{{ title }} - Financial Predictions</title>
+{% else %}
+<title>Financial Predictions</title>
+{% endif %}
+</head>
+<body>
+{% block content %}
+{% endblock %}
+</body>
+<script>
+    document.getElementById('datePicker').valueAsDate = new Date();
+</script>
+</html>

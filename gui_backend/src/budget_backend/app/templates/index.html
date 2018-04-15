@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<form action="/category" method="POST" style="width: 100%">
+    <p>
+        <label for="category">New Category</label>
+        <input type="text" name="category" />
+    </p>
+    <p>
+        <input type="submit" value="Submit">
+    </p>
+</form>
+
+<form action = "/result" method = "POST" style="width:100%">
+    <p>
+        <label for="date">Date</label>
+        <input id="datePicker" name="date" type="date" />
+    </p>
+    <p>
+        <label for="category">Category</label>
+        <select name="category">
+            {% for category in budget.get_categories() %}
+            <option>{{ category }}</option>
+            {% endfor %}
+        </select>
+    </p>
+    <p>
+        <label for="data">Spending</label>
+        <input type="text" name="data" />
+    </p>
+    <p><input type="submit" value="Submit" /></p>
+</form>
+
+<form action="/" method="GET" style="width: 100%">
+    <p>
+        <input type="submit" value="Refresh" />
+    </p>
+</form>
+
+{% if budget %}
+<h3>Budget:</h3>
+<table id="budget" style="width:100%">
+    {% for row in budget.get_header_row_data() %}
+    <tr>
+        {% for cell in row %}
+        <th style="text-align: center">{{ cell.internal_value }}</th>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    {% for row in budget.get_row_data(min_row=2) %}
+    {% if row[0].internal_value is not none %}
+    <tr>
+        {% for cell in row %}
+            {% if is_date_time(cell.internal_value) %}
+                <td style="text-align: center">{{ cell.internal_value.strftime('%Y-%m-%d') }}</td>
+            {% else %}
+                <td style="text-align: center">{{ cell.internal_value }}</td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+{% else %}
+<h3>No data exists yet. Start by adding data above.</h3>
+{% endif %}
+
+{% if recommendations %}
+<h3>Recommended stock actions</h3>
+<table id="recommendations" style="width:100%">
+    <tr>
+        <th>Buy</th>
+        <th>Sell</th>
+    </tr>
+    {% for buys in recommendations[0], sells in recommendations[1] %}
+    <tr>
+        <td>{{ buys }}</td>
+        <td>{{ sells }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No recommendations are available to view at the moment</p>
+{% endif %}
+
+{% endblock %}
