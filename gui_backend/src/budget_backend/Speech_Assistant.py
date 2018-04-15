@@ -9,12 +9,12 @@ import pyglet
 import excel_budget.budgetsheet as bs
 import time
 import os
-from ML import ml_skill
+from ML.ML import ml_skill
 
 def speak(audioString):
     print(audioString)
     tts = gTTS(text=audioString, lang='en')
-    filename = "/budget-backend/audio.mp3"
+    filename = "/Python27/audio.mp3"
     tts.save(filename)
 
     music = pyglet.media.load(filename, streaming = False)
@@ -52,7 +52,7 @@ def createCats():
     isYes = "no"
     global catGList
     
-    while(isNo != "no" and isYes != "yes"):
+    while(isNo == "yes" and isYes == "no"):
         isYes = ""
         isNo = ""
         tmpData = ""
@@ -66,6 +66,7 @@ def createCats():
         for val in tmpData:
             if ((val != "and") and (val not in catGList)):
                 catGList.append(val)
+                obj.add_category(val)
 
         # If/Else statement for varying responses from bot       
         if (flag != 0):
@@ -89,8 +90,8 @@ def dailyRecorder():
     expTmpList = []
     # Receive the value for each category from user
     # and export to excel
-    while(i < len(catGList)):
-        statement = list[(len(list)%(i+1))].format(catGList[i])
+    while(i < len(catVGList)):
+        statement = list[(len(list)%(i+1))].format(catGVList[i])
         speak(statement)
         tmpData = recordAudio()
         print tmpData
@@ -106,7 +107,7 @@ def dailyRecorder():
                     expTmpList.append(val)
                     i+=1
 
-    storeXL(catGList, expTmpList)
+    storeXL(catGVList, expTmpList)
 
 def nextDate(lastDate):
     lastDate = lastDate.split('-')
@@ -116,8 +117,6 @@ def nextDate(lastDate):
 
 # StoreXL calls functions from budgetsheet.py to make realtime modifications to spreadsheet
 def storeXL(catList, valList):
-    print catList
-    print valList
     lastDate = obj.get_last_row_title()
     date = nextDate(lastDate)
     if (len(valList) == len(catList)):
@@ -135,7 +134,7 @@ def corona(lData):
     elif "update my daily" in lData:
             dailyRecorder()
 
-    else:
+    else:        
         catTmpList = []
         expTmpList = []
         replacements = ('$', "bucks", "dollars")
@@ -151,7 +150,10 @@ def corona(lData):
 
         storeXL(catTmpList, expTmpList)
 
-    mlRec()
+    speak("Do you wanna know about stock trading options?")
+    tmp = recordAudio()
+    if (tmp == "yes"):
+        mlRec()
 
 def mlRec():
     buy = {}
@@ -167,7 +169,7 @@ def mlRec():
 
     for val in tmpData:
         if (val.isnumeric()):        
-            savings = obj.get_money_spent_by_day() - val
+            savings = obj.get_money_spent_for_last_row() - val
                   
     buy, sell = ml_skill(savings)
     
@@ -181,8 +183,8 @@ def mlRec():
 
 # Login an existing user or a new one or skip it entirely
 def login():
-    #speak("Hey there! Do you want to see my creators' login feature demo or no?")
-    speak("Hey there! yes or no?")
+    speak("Hey there! Do you want to see my creators' login feature demo or no?")
+    #speak("Hey there! yes or no?")
     tmpData = recordAudio()
 
     # If the user hasn't answered yet
