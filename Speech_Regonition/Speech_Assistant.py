@@ -2,18 +2,20 @@
 # Requires PyAudio and PySpeech.
  
 import speech_recognition as sr
+from gtts import gTTS
 from time import ctime
+import pyglet
+import excel_budget.budgetsheet as bs
 import time
 import os
-import pyglet
-from gtts import gTTS
- 
+from datetime import datetime, timedelta
+
 def speak(audioString):
     print(audioString)
     tts = gTTS(text=audioString, lang='en')
     filename = "/python27/audio.mp3"
     tts.save(filename)
-##  os.system("mpg321 audio.mp3")
+
     music = pyglet.media.load(filename, streaming = False)
     music.play()
     time.sleep(music.duration)
@@ -83,7 +85,7 @@ def dailyRecorder():
             "What about {}",
             "Next is {}"]
     i =0
-
+    expTmpList = []
     # Receive the value for each category from user
     # and export to excel
     while(i < len(catGList)):
@@ -104,27 +106,49 @@ def dailyRecorder():
                     i+=1
 
     storeXL(catGList, expTmpList)
-    
+
+def nextDate(lastDate):
+    lastDate = lastDate.split('-')
+    date = datetime(int(lastDate[0]), int(lastDate[1]), int(lastDate[2]))
+    newDate = date + timedelta(days=1)
+    return newDate.strftime('%Y-%m-%d')
+
+# StoreXL calls functions from budgetsheet.py to make realtime modifications to spreadsheet
+def storeXL(catList, valList):
+    print catList
+    print valList
+    lastDate = obj.get_last_row_title()
+    date = nextDate(lastDate)
+    if (len(valList) == len(catList)):
+        for i in range(len(valList)):
+            obj.write_budget_cell(date, catList[i], valList[i])        
+
 # Stella manages all user commands for recording data
 def corona(lData):
-
-    global catGlist
-    #data = ldata.split(" ")
+    global catGVlist
 
     if "create expense" in lData:
         createCats()
         print catGList
     
     elif "update my daily" in lData:
-        dailyRecorder()
+            dailyRecorder()
 
     else:
+        catTmpList = []
+        expTmpList = []
+        replacements = ('$', "bucks", "dollars")
+        for r in replacements:
+            lData = lData.replace(r, " ")
+        lData = lData.split(" ")
+
         for val in lData:
-            if val in catGList:
+            if val in catGVList:
                 catTmpList.append(val)
-            if (val.is_number()):
+            if (val.isnumeric()):
                 expTmpList.append(val)
-        storeXL(catGList, expTmpList)      
+
+        storeXL(catTmpList, expTmpList)      
 
     ##    if "how are you" in data:
     ##        speak("I am fine")
@@ -201,10 +225,10 @@ def main():
     flag = False
     name = "User"
     time.sleep(1)
-   
+    
     while(not flag):
         flag, name = login()
-
+    
     print(" \n")
     speak("Hi " + name + ", what can I do for you?")
     while (1):
@@ -213,7 +237,10 @@ def main():
         if rData[0] == "Corona":
             corona(data)
         
+
 userList = {"Ron" : "123", "Sam":"124", "Meena":"125", "Alec":"126"}      
 catGList = []
-catGList = ["groceries", "gas", "restaurants", "snacks", "shopping"]
+#catGList = ["groceries", "gas", "restaurants", "snacks", "shopping"]
+catGVList = ["groceries", "gas", "restaurants", "snacks", "shopping", "electric", "internet", "water"]
+obj = bs.BudgetSheet(os.path.join(os.getcwd(), 'data', 'test.xlsx'))
 main()
