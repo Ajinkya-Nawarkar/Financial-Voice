@@ -34,7 +34,7 @@
 </form>
 </div>
 
-<h3 class="w3-containter w3-half w3-rest">Budget:</h3>
+<h3 class="w3-container w3-half w3-rest">Budget:</h3>
 <form class="w3-container w3-half w3-rest" action="/" method="GET">
     <p>
         <input class="w3-input" type="submit" value="Refresh" />
@@ -72,19 +72,33 @@
 
 {% if recommendations %}
 <h3>Recommended stock actions</h3>
-<table id="recommendations" style="width:100%">
+<table class="w3-container w3-half" id="recommendations">
     <thead>
         <tr>
             <th>Buy</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for buys in recommendations[0] %}
+        <tr>
+            <td>{{ buys }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<table class="w3-container w3-half" id="sell-recommendations">
+    <thead>
+        <tr>
             <th>Sell</th>
         </tr>
     </thead>
-    {% for buys in recommendations[0], sells in recommendations[1] %}
-    <tr>
-        <td>{{ buys }}</td>
-        <td>{{ sells }}</td>
-    </tr>
-    {% endfor %}
+    <tbody>
+        {% for sells in recommendations[1] %}
+        <tr>
+            <td>{{ sells }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 {% else %}
 <p>No recommendations are available to view at the moment</p>

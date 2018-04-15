@@ -24,6 +24,17 @@ def update_budget(path):
     logging.info("reading budget data from {}".format(file_path))
     return budgetsheet.BudgetSheet(file_path)
 
+def prepare_stock_info(savings):
+    result = ml_skill(savings)
+    buy = []
+    sell = []
+    for r in result[0].keys():
+        buy.append('{} {}'.format(r, result[0][r][0]))
+    for r in result[1].keys():
+        sell.append('{} {}'.format(r, result[1][r][0]))
+    print('buy', buy)
+    print('sell', sell)
+    return (buy, sell)
 
 @app.route('/')
 @app.route('/index')
@@ -31,7 +42,7 @@ def index():
     budget = update_budget(BUDGET_SHEET_PATH)
     return render_template('index.html',
                            budget=budget,
-                           recommendations=ml_skill(4000),
+                           recommendations=prepare_stock_info(4000),
                            is_date_time=is_date_time,
                            strftime=time.strftime)
 
@@ -46,7 +57,7 @@ def result():
                                  request.form.get('data'))
     return render_template('index.html',
                            budget=budget,
-                           recommendations=ml_skill(4000),
+                           recommendations=prepare_stock_info(4000),
                            is_date_time=is_date_time,
                            strftime=time.strftime)
 
@@ -58,7 +69,7 @@ def category():
         budget.add_category(request.form.get('category'))
     return render_template('index.html',
                            budget=budget,
-                           recommendations=ml_skill(4000),
+                           recommendations=prepare_stock_info(4000),
                            is_date_time=is_date_time,
                            strftime=time.strftime)
 
