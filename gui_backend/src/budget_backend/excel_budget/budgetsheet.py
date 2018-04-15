@@ -6,20 +6,29 @@ class BudgetSheet(BasicSheet):
     def __init__(self, file_name):
         super(BudgetSheet, self).__init__(file_name)
 
-    def get_daily_money_spent(self):
+    def get_daily_money_spent_list(self):
         """sum all spending data and return the value"""
-        daily_total = []
+        daily_total_list = []
         rows = self.get_row_data(min_row=2)
         for row in rows:
-            total = 0
-            cells = self._iter_cells(row)
-            for cell in cells:
-                try:
-                    total = total + float(cell)
-                except Exception:
-                    pass
-            daily_total.append(total)
-        return daily_total
+            daily_total_list.append(self._sum_row(row))
+        return daily_total_list
+
+    def get_money_spent_for_last_row(self):
+        """given a string date, return the amount of money spent within a single day"""
+        row = self.get_row_data(min_row=self.active_sheet.max_row, max_row=self.active_sheet.max_row)
+        for r in row:
+            return self._sum_row(r)
+
+    def get_total_money_saved(self, budget):
+        """given a integer budget value, return the amount of money not spent
+        (saved) for each day
+        """
+        overall_total = 0
+        daily_total_list = self.get_daily_money_spent_list()
+        for total in daily_total_list:
+            overall_total = overall_total + (budget - total)
+        return overall_total
 
     def get_categories(self):
         """get the list of budgeting categories in the header
@@ -80,3 +89,13 @@ class BudgetSheet(BasicSheet):
                 col_num += 1
         print('Adding new column for category {}'.format(col_name))
         return self.get_next_col_index()
+
+    def _sum_row(self, row):
+        total = 0
+        cells = self._iter_cells(row)
+        for cell in cells:
+            try:
+                total = total + float(cell)
+            except Exception:
+                pass
+        return total
