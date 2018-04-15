@@ -29,9 +29,9 @@ def prepare_stock_info(savings):
     buy = []
     sell = []
     for r in result[0].keys():
-        buy.append('{} {}'.format(r, result[0][r][0]))
+        buy.append('{} {}'.format(r, '%.2f'%result[0][r][0]))
     for r in result[1].keys():
-        sell.append('{} {}'.format(r, result[1][r][0]))
+        sell.append('{} {}'.format(r, '%.2f'%result[1][r][0]))
     print('buy', buy)
     print('sell', sell)
     return (buy, sell)
