@@ -3,6 +3,7 @@ Application for Stock Analysis based on ML algorithm for Expense budget enabled 
 
 # Dependencies instructions for Speech Recognition Interface: (Could be installed on both Windows as well as Linux) 
 
+
 First, ugrade pip with `pip install --upgrade pip`
 
 Use `pip install -r requirements.txt` to install all the dependencies
@@ -18,6 +19,7 @@ Use `pip install -r requirements.txt` to install all the dependencies
 - waitress (for windows)
 - gunicorn (for linux)
 - You might also need AVbin5 or AVbin10 dlls (dependencies for microphone and pyaudio packages). 
+
    Download AVbin10 from https://avbin.github.io/AVbin/Download.html and execute the install script. 
    If the errors are still not resolved, try moving the ddl in the folder of all py files
 
