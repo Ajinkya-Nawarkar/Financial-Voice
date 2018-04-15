@@ -22,7 +22,8 @@ Use `pip install -r requirements.txt` to install all the dependencies
    If the errors are still not resolved, try moving the ddl in the folder of all py files
 
 # Start the Backend
-1. Call `waitress-serve --listen:*:8000 app:app` from within `backend\budget-backend\src\budget_backend`
+1. Call `waitress-serve --listen=*:8000 app:app` from within `backend\budget-backend\src\budget_backend`
+- If on linux, call `gunicorn app:app` from within the same directory
 2. Go to localhost:8000
 
 
