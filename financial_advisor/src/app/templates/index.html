@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="col-container">
+    <form class="w3-container w3-half w3-rest container" action="/category" method="POST">
+        <p>
+            <label for="category">New Category</label>
+            <input class="w3-input" type="text" name="category" />
+        </p>
+        <p>
+            <input class="w3-input" type="submit" value="Submit">
+        </p>
+    </form>
+
+<form class="w3-container w3-half w3-rest container" action = "/result" method = "POST">
+    <p>
+        <label for="date">Date</label>
+        <input class="w3-input" id="datePicker" name="date" type="date" />
+    </p>
+    <p>
+        <label for="category">Category</label>
+        <select class="w3-input" name="category">
+            {% for category in budget.get_categories() %}
+            <option>{{ category }}</option>
+            {% endfor %}
+        </select>
+    </p>
+    <p>
+        <label for="data">Spending</label>
+        <input class="w3-input" type="text" name="data" />
+    </p>
+    <p><input class="w3-input" type="submit" value="Submit" /></p>
+</form>
+</div>
+
+<h3 class="w3-container w3-half w3-rest">Budget:</h3>
+<form class="w3-container w3-half w3-rest" action="/" method="GET">
+    <p>
+        <input class="w3-input" type="submit" value="Refresh" />
+    </p>
+</form>
+
+{% if budget %}
+<table id="budget" style="width:100%">
+    <thead>
+        {% for row in budget.get_header_row_data() %}
+        <tr>
+            {% for cell in row %}
+            <th style="text-align: center">{{ cell.internal_value }}</th>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </thead>
+    {% for row in budget.get_row_data(min_row=2) %}
+    {% if row[0].internal_value is not none %}
+    <tr>
+        {% for cell in row %}
+            {% if is_date_time(cell.internal_value) %}
+                <td style="text-align: center">{{ cell.internal_value.strftime('%Y-%m-%d') }}</td>
+            {% else %}
+                <td style="text-align: center">{{ cell.internal_value }}</td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+{% else %}
+<h3>No data exists yet. Start by adding data above.</h3>
+{% endif %}
+
+{% if recommendations %}
+<h3>Recommended stock actions</h3>
+<table class="w3-container w3-half" id="recommendations">
+    <thead>
+        <tr>
+            <th>Buy</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for buys in recommendations[0] %}
+        <tr>
+            <td>{{ buys }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<table class="w3-container w3-half" id="sell-recommendations">
+    <thead>
+        <tr>
+            <th>Sell</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sells in recommendations[1] %}
+        <tr>
+            <td>{{ sells }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No recommendations are available to view at the moment</p>
+{% endif %}
+
+{% endblock %}
