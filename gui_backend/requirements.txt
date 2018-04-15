@@ -12,9 +12,9 @@ pandas>=0.6.0,<1.0.0
 pandas-datareader>=0.6.0,<1.0.0
 pyaudio>=0.2.11,<1.0.0
 pyglet>=1.3.2,<2.0.0
-pyspeech>=0.0.0,<1.0.0
 scikit-image>=0.13.1,<1.0.0
 scikit-learn>=0.19.1,<1.0.0
 scipy==1.0.0
 SpeechRecognition>=3.8.1,<4.0.0
 waitress>=1.1.0,<2.0.0
+# gunicorn>=19.7.1,<20.0.0
