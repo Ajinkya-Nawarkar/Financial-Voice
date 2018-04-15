@@ -5,6 +5,7 @@ Created on Sat Apr 14 22:47:54 2018
 
 @author: meenakshidas
 """
+
 def ml_skill(savings):
     """given an integer input on amount saved, return a tuple of recommended buy/sell stocks"""
     print("Give it 10 seconds to train model with latest financial day")
@@ -16,6 +17,19 @@ def ml_skill(savings):
              'JILL', 'WSTL', 'UIS', 'TGH', 'KEM', 'NEXA', 'CNDT', 'BLDR', 'APTO', 'HALO', 'PIRS', 'XOM', 'CVX',
              'NATH', 'YUM', 'BAC', 'WTW', 'AMAT', 'SCHW', 'CUB', 'DLPH', 'DXC', 'AMP', 'COF', 'F', 'MSFT', 'SGH', 'NTNX',
              'ABMD']
+    actual_names = ['cisco','qualcomm', 'square', 'adtran', 'twitter','advanced micro devices', 'ebay', 'ge', 'google',
+                    'Arcos Dorados Holding', 'Banco Santander', 'sunrun','smart sand','xplore technologies',
+                    'jill', 'westell technologies', ' Unisys Corporation', 'Textainer Group Holdings',
+                    'KEMET Corporation', 'Nexa Resources', 'Cabot Corp', 'Builders FirstSource',
+                    'Aptose Biosciences', 'Halozyme Therapeutics', 'Pieris Pharmaceuticals', 'Exxon Mobil Corporation',
+                    'Chevron Corporation', 'Nathan"s Famous','yum brands', 'bank of america', 'Weight Watchers International',
+                    'Applied Materials', 'Charles Schwab Corporation', 'Cubic Corporation', 'Delphi Technologies',
+                    'dxc technologies', 'Ameriprise Financial', 'Capital One Financial Corp', 'Ford Motor Company',
+                    'microsoft', ' Smart Global Holdings', 'Nutanix', 'ABIOMED']
+
+    stock_names = {}
+    for i in range(0,len(alist)):
+        stock_names[alist[i]] = actual_names[i]
     
     Next_day_opening_vals = {}
     current_day_opening_vals = {}
@@ -84,22 +98,19 @@ def ml_skill(savings):
         for key, value in Next_day_opening_vals.items():
             if value >500 :
                 recommendated_stocks_predicted_values[key] = Next_day_opening_vals[key]
-            elif (value >10 and value <=30):
+            elif (value >10 and value <=1000):
                 other_recommendations[key] = Next_day_opening_vals[key]
                 
     for key, val in recommendated_stocks_predicted_values.items():
         if val - current_day_opening_vals[key] > 0 :
-            sell[key] = val
+            sell[stock_names[key]] = val
         else:
-            buy[key] = val
+            buy[stock_names[key]] = val
     
     for key, val in other_recommendations.items():
          if val - current_day_opening_vals[key] > 0 :
-            sell[key] = val
+            sell[stock_names[key]] = val
          else:
-            buy[key] = val
+            buy[stock_names[key]] = val
             
     return(buy,sell)
-
-if __name__=="__main__":
-    ml_skill(2000)
