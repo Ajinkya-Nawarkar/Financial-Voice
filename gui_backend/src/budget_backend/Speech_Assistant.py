@@ -92,7 +92,7 @@ def dailyRecorder():
         statement = list[(len(list)%(i+1))].format(catGList[i])
         speak(statement)
         tmpData = recordAudio()
-        print tmpData
+        print(tmpData)
 
         if (tmpData != ""):
             replacements = ('$', "bucks", "dollars")
@@ -115,8 +115,8 @@ def nextDate(lastDate):
 
 # StoreXL calls functions from budgetsheet.py to make realtime modifications to spreadsheet
 def storeXL(catList, valList):
-    print catList
-    print valList
+    print(catList)
+    print(valList)
     lastDate = obj.get_last_row_title()
     date = nextDate(lastDate)
     if (len(valList) == len(catList)):
@@ -129,7 +129,7 @@ def corona(lData):
 
     if "create expense" in lData:
         createCats()
-        print catGList
+        print(catGList)
     
     elif "update my daily" in lData:
             dailyRecorder()
