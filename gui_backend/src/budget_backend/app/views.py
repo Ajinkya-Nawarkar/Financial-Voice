@@ -42,7 +42,7 @@ def index():
     budget = update_budget(BUDGET_SHEET_PATH)
     return render_template('index.html',
                            budget=budget,
-                           recommendations=prepare_stock_info(4000),
+                           recommendations=prepare_stock_info(2000),
                            is_date_time=is_date_time,
                            strftime=time.strftime)
 
@@ -57,7 +57,7 @@ def result():
                                  request.form.get('data'))
     return render_template('index.html',
                            budget=budget,
-                           recommendations=prepare_stock_info(4000),
+                           recommendations=prepare_stock_info(2000),
                            is_date_time=is_date_time,
                            strftime=time.strftime)
 
@@ -69,7 +69,7 @@ def category():
         budget.add_category(request.form.get('category'))
     return render_template('index.html',
                            budget=budget,
-                           recommendations=prepare_stock_info(4000),
+                           recommendations=prepare_stock_info(2000),
                            is_date_time=is_date_time,
                            strftime=time.strftime)
 
