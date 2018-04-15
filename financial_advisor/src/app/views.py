@@ -5,6 +5,7 @@ import time
 from app import app
 from flask import render_template, request, send_file
 from excel_budget import budgetsheet
+from ML.ML import ml_skill
 
 
 BUDGET_SHEET_PATH = os.path.join(os.getcwd(), 'data', 'test.xlsx')
@@ -23,6 +24,17 @@ def update_budget(path):
     logging.info("reading budget data from {}".format(file_path))
     return budgetsheet.BudgetSheet(file_path)
 
+def prepare_stock_info(savings):
+    result = ml_skill(savings)
+    buy = []
+    sell = []
+    for r in result[0].keys():
+        buy.append('{} {}'.format(r, '%.2f'%result[0][r][0]))
+    for r in result[1].keys():
+        sell.append('{} {}'.format(r, '%.2f'%result[1][r][0]))
+    # print('buy', buy)
+    # print('sell', sell)
+    return (buy, sell)
 
 @app.route('/')
 @app.route('/index')
@@ -30,6 +42,7 @@ def index():
     budget = update_budget(BUDGET_SHEET_PATH)
     return render_template('index.html',
                            budget=budget,
+                           recommendations=prepare_stock_info(2000),
                            is_date_time=is_date_time,
                            strftime=time.strftime)
 
@@ -44,6 +57,7 @@ def result():
                                  request.form.get('data'))
     return render_template('index.html',
                            budget=budget,
+                           recommendations=prepare_stock_info(2000),
                            is_date_time=is_date_time,
                            strftime=time.strftime)
 
@@ -55,6 +69,7 @@ def category():
         budget.add_category(request.form.get('category'))
     return render_template('index.html',
                            budget=budget,
+                           recommendations=prepare_stock_info(2000),
                            is_date_time=is_date_time,
                            strftime=time.strftime)
 
