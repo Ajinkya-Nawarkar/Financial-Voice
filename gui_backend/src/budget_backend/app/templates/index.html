@@ -67,4 +67,22 @@
 <h3>No data exists yet. Start by adding data above.</h3>
 {% endif %}
 
+{% if recommendations %}
+<h3>Recommended stock actions</h3>
+<table id="recommendations" style="width:100%">
+    <tr>
+        <th>Buy</th>
+        <th>Sell</th>
+    </tr>
+    {% for buys in recommendations[0], sells in recommendations[1] %}
+    <tr>
+        <td>{{ buys }}</td>
+        <td>{{ sells }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No recommendations are available to view at the moment</p>
+{% endif %}
+
 {% endblock %}

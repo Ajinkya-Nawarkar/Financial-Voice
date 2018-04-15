@@ -5,6 +5,7 @@ import time
 from app import app
 from flask import render_template, request, send_file
 from excel_budget import budgetsheet
+from ML.ML import ml_skill
 
 
 BUDGET_SHEET_PATH = os.path.join(os.getcwd(), 'data', 'test.xlsx')
@@ -30,6 +31,7 @@ def index():
     budget = update_budget(BUDGET_SHEET_PATH)
     return render_template('index.html',
                            budget=budget,
+                           recommendations=ml_skill(4000),
                            is_date_time=is_date_time,
                            strftime=time.strftime)
 
@@ -44,6 +46,7 @@ def result():
                                  request.form.get('data'))
     return render_template('index.html',
                            budget=budget,
+                           recommendations=ml_skill(4000),
                            is_date_time=is_date_time,
                            strftime=time.strftime)
 
@@ -55,6 +58,7 @@ def category():
         budget.add_category(request.form.get('category'))
     return render_template('index.html',
                            budget=budget,
+                           recommendations=ml_skill(4000),
                            is_date_time=is_date_time,
                            strftime=time.strftime)
 
