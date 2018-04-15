@@ -4,16 +4,17 @@
 import speech_recognition as sr
 from gtts import gTTS
 from time import ctime
+from datetime import datetime, timedelta
 import pyglet
 import excel_budget.budgetsheet as bs
 import time
 import os
-from datetime import datetime, timedelta
+from ML import ml_skill
 
 def speak(audioString):
     print(audioString)
     tts = gTTS(text=audioString, lang='en')
-    filename = "/python27/audio.mp3"
+    filename = "/budget-backend/audio.mp3"
     tts.save(filename)
 
     music = pyglet.media.load(filename, streaming = False)
@@ -92,7 +93,7 @@ def dailyRecorder():
         statement = list[(len(list)%(i+1))].format(catGList[i])
         speak(statement)
         tmpData = recordAudio()
-        print(tmpData)
+        print tmpData
 
         if (tmpData != ""):
             replacements = ('$', "bucks", "dollars")
@@ -115,8 +116,8 @@ def nextDate(lastDate):
 
 # StoreXL calls functions from budgetsheet.py to make realtime modifications to spreadsheet
 def storeXL(catList, valList):
-    print(catList)
-    print(valList)
+    print catList
+    print valList
     lastDate = obj.get_last_row_title()
     date = nextDate(lastDate)
     if (len(valList) == len(catList)):
@@ -129,7 +130,7 @@ def corona(lData):
 
     if "create expense" in lData:
         createCats()
-        print(catGList)
+        print catGList
     
     elif "update my daily" in lData:
             dailyRecorder()
@@ -148,19 +149,35 @@ def corona(lData):
             if (val.isnumeric()):
                 expTmpList.append(val)
 
-        storeXL(catTmpList, expTmpList)      
+        storeXL(catTmpList, expTmpList)
 
-    ##    if "how are you" in data:
-    ##        speak("I am fine")
-    ## 
-    ##    if "what time is it" in data:
-    ##        speak(ctime())
-    ## 
-    ##    if "where is" in data:
-    ##        data = data.split(" ")
-    ##        location = data[2]
-    ##        speak("Hold on Ajinkya, I will show you where " + location + " is.")
-    ##        os.system("chromium-browser https://www.google.nl/maps/place/" + location + "/&amp;")
+    mlRec()
+
+def mlRec():
+    buy = {}
+    sell = {}
+    savings =0
+    
+    speak("How much is your daily budget?")
+    tmpData = recordAudio()
+    replacements = ('$', "bucks", "dollars")
+    for r in replacements:
+        tmpData = tmpData.replace(r, " ")
+    tmpData = tmpData.split(" ")
+
+    for val in tmpData:
+        if (val.isnumeric()):        
+            savings = obj.get_money_spent_by_day() - val
+                  
+    buy, sell = ml_skill(savings)
+    
+    speak("Based on your expense report and savings, here are 5 stocks you'll benefit from if you buy today based on my Algorithms")    
+    for x in buy:
+        speak(x)
+
+    speak("And here are 5 stocks you'll benefit from if you SELL them today")    
+    for x in sell:
+        speak(x)
 
 # Login an existing user or a new one or skip it entirely
 def login():
