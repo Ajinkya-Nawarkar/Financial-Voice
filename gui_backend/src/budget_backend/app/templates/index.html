@@ -2,25 +2,25 @@
 
 {% block content %}
 
+<div class="col-container">
+    <form class="w3-container w3-half w3-rest container" action="/category" method="POST">
+        <p>
+            <label for="category">New Category</label>
+            <input class="w3-input" type="text" name="category" />
+        </p>
+        <p>
+            <input class="w3-input" type="submit" value="Submit">
+        </p>
+    </form>
 
-<form action="/category" method="POST" style="width: 100%">
-    <p>
-        <label for="category">New Category</label>
-        <input type="text" name="category" />
-    </p>
-    <p>
-        <input type="submit" value="Submit">
-    </p>
-</form>
-
-<form action = "/result" method = "POST" style="width:100%">
+<form class="w3-container w3-half w3-rest container" action = "/result" method = "POST">
     <p>
         <label for="date">Date</label>
-        <input id="datePicker" name="date" type="date" />
+        <input class="w3-input" id="datePicker" name="date" type="date" />
     </p>
     <p>
         <label for="category">Category</label>
-        <select name="category">
+        <select class="w3-input" name="category">
             {% for category in budget.get_categories() %}
             <option>{{ category }}</option>
             {% endfor %}
@@ -28,27 +28,30 @@
     </p>
     <p>
         <label for="data">Spending</label>
-        <input type="text" name="data" />
+        <input class="w3-input" type="text" name="data" />
     </p>
-    <p><input type="submit" value="Submit" /></p>
+    <p><input class="w3-input" type="submit" value="Submit" /></p>
 </form>
+</div>
 
-<form action="/" method="GET" style="width: 100%">
+<h3 class="w3-containter w3-half w3-rest">Budget:</h3>
+<form class="w3-container w3-half w3-rest" action="/" method="GET">
     <p>
-        <input type="submit" value="Refresh" />
+        <input class="w3-input" type="submit" value="Refresh" />
     </p>
 </form>
 
 {% if budget %}
-<h3>Budget:</h3>
 <table id="budget" style="width:100%">
-    {% for row in budget.get_header_row_data() %}
-    <tr>
-        {% for cell in row %}
-        <th style="text-align: center">{{ cell.internal_value }}</th>
+    <thead>
+        {% for row in budget.get_header_row_data() %}
+        <tr>
+            {% for cell in row %}
+            <th style="text-align: center">{{ cell.internal_value }}</th>
+            {% endfor %}
+        </tr>
         {% endfor %}
-    </tr>
-    {% endfor %}
+    </thead>
     {% for row in budget.get_row_data(min_row=2) %}
     {% if row[0].internal_value is not none %}
     <tr>
@@ -70,10 +73,12 @@
 {% if recommendations %}
 <h3>Recommended stock actions</h3>
 <table id="recommendations" style="width:100%">
-    <tr>
-        <th>Buy</th>
-        <th>Sell</th>
-    </tr>
+    <thead>
+        <tr>
+            <th>Buy</th>
+            <th>Sell</th>
+        </tr>
+    </thead>
     {% for buys in recommendations[0], sells in recommendations[1] %}
     <tr>
         <td>{{ buys }}</td>

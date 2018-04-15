@@ -1,6 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        thead {
+            background-color: #4AAE52;
+            border: 1px solid #4AAE52;
+        }
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .col-container {
+            display: table;
+            width: 100%;
+        }
+        .container {
+            display: table-cell;
+        }
+    </style>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 {% if title %}
 <title>{{ title }} - Financial Predictions</title>
 {% else %}
