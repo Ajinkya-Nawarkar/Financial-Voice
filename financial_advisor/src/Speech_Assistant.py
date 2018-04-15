@@ -14,7 +14,7 @@ from ML.ML import ml_skill
 def speak(audioString):
     print(audioString)
     tts = gTTS(text=audioString, lang='en')
-    filename = "/Python27/audio.mp3"
+    filename = "/src/audio.mp3"
     tts.save(filename)
 
     music = pyglet.media.load(filename, streaming = False)
@@ -86,12 +86,12 @@ def dailyRecorder():
             "What should I add for {}",
             "What about {}",
             "Next is {}"]
-    i =0
+    i =1
     expTmpList = []
     # Receive the value for each category from user
     # and export to excel
-    while(i < len(catVGList)):
-        statement = list[(len(list)%(i+1))].format(catGVList[i])
+    while(i <= len(catGVList)):
+        statement = list[(len(list)%(i-1))].format(catGVList[i])
         speak(statement)
         tmpData = recordAudio()
         print tmpData
